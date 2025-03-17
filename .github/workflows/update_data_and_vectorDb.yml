@@ -1,0 +1,40 @@
+name: Update Financial Data
+
+on:
+  schedule:
+    - cron: "0 3 1 * *"  # Runs on the 1st of every month at 3 AM UTC
+  workflow_dispatch:  # Allows manual trigger from GitHub Actions UI
+
+jobs:
+  update-data:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3  # Fetch the latest version of your repo
+
+      - name: Set up Python
+        uses: actions/setup-python@v3
+        with:
+          python-version: "3.9"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Run ETL Pipeline
+        run: python etl_scripts.py
+
+      - name: Update Vector Database
+        run: python populate_vectordb.py
+
+      - name: Commit & Push Updated Data
+        run: |
+          git config --global user.name "GitHub Action"
+          git config --global user.email "github-actions@github.com"
+          git add data/  # Add new CSVs
+          git commit -m "Auto-update financial data" || echo "No changes to commit"
+          git push origin main
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Uses GitHub's built-in token
