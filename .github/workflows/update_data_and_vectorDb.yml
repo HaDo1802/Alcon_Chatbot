@@ -2,8 +2,8 @@ name: Update Financial Data
 
 on:
   schedule:
-    - cron: "0 3 1 * *"  # Runs on the 1st of every month at 3 AM UTC
-  workflow_dispatch:  # Allows manual trigger from GitHub Actions UI
+    - cron: '0 0 * * *'  # Runs daily at midnight UTC
+  workflow_dispatch:  # Allows manual triggering
 
 jobs:
   update-data:
@@ -11,7 +11,7 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v3  # Fetch the latest version of your repo
+        uses: actions/checkout@v3
 
       - name: Set up Python
         uses: actions/setup-python@v3
@@ -24,17 +24,7 @@ jobs:
           pip install -r requirements.txt
 
       - name: Run ETL Pipeline
-        run: python etl_scripts.py
+        run: python ETL/etl_scripts.py  # ✅ Updated the correct path
 
       - name: Update Vector Database
-        run: python populate_vectordb.py
-
-      - name: Commit & Push Updated Data
-        run: |
-          git config --global user.name "GitHub Action"
-          git config --global user.email "github-actions@github.com"
-          git add data/  # Add new CSVs
-          git commit -m "Auto-update financial data" || echo "No changes to commit"
-          git push origin main
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Uses GitHub's built-in token
+        run: python populate_vectordb.py  # ✅ Ensure this is the correct path
