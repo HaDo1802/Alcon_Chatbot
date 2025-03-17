@@ -1,0 +1,35 @@
+# Ignore Python compiled files
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Ignore virtual environments
+venv/
+env/
+.venv/
+*.egg-info/
+
+# Ignore logs and temporary files
+*.log
+*.tmp
+.DS_Store
+
+# Ignore Jupyter Notebook checkpoints
+.ipynb_checkpoints/
+
+# Ignore environment variables & credentials
+.env
+config.toml
+
+
+# Ignore database files
+*.db
+*.sqlite3
+
+
+# Ignore VS Code settings (optional)
+.vscode/
+
+# Ignore MacOS system files (optional)
+*.DS_Store
